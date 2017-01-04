@@ -25,18 +25,18 @@ import webbrowser
 # noinspection PyUnresolvedReferences
 import qgis  # pylint: disable=unused-import
 # noinspection PyUnresolvedReferences
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
 try:
-    from PyQt4.QtWebKit import *
+    from PyQt5.QtWebKit import *
     webkit_available = True
 except ImportError:
     webkit_available = False
-from PyQt4 import QtGui
+from PyQt5 import QtGui
 import traceback
 import logging
 
-from ui_maindialog import Ui_MainDialog
+from .ui_maindialog import Ui_MainDialog
 import utils
 from configparams import paramsOL, baselayers, specificParams, specificOptions
 from olwriter import writeOL
@@ -163,7 +163,7 @@ class MainDialog(QDialog, Ui_MainDialog):
             errorHTML += traceback.format_exc().replace("\n", "<br />")
             errorHTML += "</code></body></html>"
             self.preview.setHtml(errorHTML)
-            print traceback.format_exc()
+            print(traceback.format_exc())
 
     def saveMap(self):
         if self.mapFormat.checkedButton().text() == "OpenLayers 3":

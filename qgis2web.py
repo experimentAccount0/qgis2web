@@ -19,10 +19,10 @@
 
 
 from qgis.core import *
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-import resources_rc
-from maindialog import MainDialog
+# from PyQt4.QtCore import *
+# from PyQt4.QtGui import *
+from . import resources_rc
+from .maindialog import MainDialog
 
 
 class Qgis2Web(object):

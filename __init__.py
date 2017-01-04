@@ -1,4 +1,5 @@
 """Export OpenLayers 3 and Leaflet webmaps from QGIS"""
+from __future__ import absolute_import
 # -*- coding: utf-8 -*-
 
 # qgis-ol3 Creates OpenLayers map from QGIS layers
@@ -25,5 +26,5 @@ def classFactory(iface):
     :param iface: QGIS interface.
     :type iface: QgisInterface.
     """
-    from .qgis2web import Qgis2Web
+    from .qgis2web.qgis2web import Qgis2Web
     return Qgis2Web(iface)
