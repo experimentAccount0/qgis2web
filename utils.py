@@ -19,8 +19,8 @@ import os
 import time
 import re
 import shutil
-from PyQt4.QtCore import QDir, QVariant
-from PyQt4.QtGui import QPainter
+from PyQt5.QtCore import QDir, QVariant
+from PyQt5.QtGui import QPainter
 from qgis.core import *
 from qgis.utils import QGis
 import processing

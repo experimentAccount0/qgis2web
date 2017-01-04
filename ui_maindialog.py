@@ -151,5 +151,5 @@ class Ui_MainDialog(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainDialog", "Export"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainDialog", "Help"))
 
-from PyQt5 import QtWebKitWidgets
-import resources_rc
+# from PyQt5 import QtWebEngineWidgets
+from . import resources_rc

@@ -37,7 +37,7 @@ import traceback
 import logging
 
 from .ui_maindialog import Ui_MainDialog
-import utils
+from . import utils
 from configparams import paramsOL, baselayers, specificParams, specificOptions
 from olwriter import writeOL
 from leafletWriter import *
