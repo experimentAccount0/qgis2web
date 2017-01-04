@@ -22,7 +22,7 @@ import shutil
 from PyQt5.QtCore import QDir, QVariant
 from PyQt5.QtGui import QPainter
 from qgis.core import *
-from qgis.utils import QGis
+from qgis.utils import Qgis
 import processing
 import tempfile
 
