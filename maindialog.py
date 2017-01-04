@@ -28,12 +28,13 @@ import qgis  # pylint: disable=unused-import
 from qgis.PyQt.QtCore import *
 from qgis.PyQt.QtGui import *
 from qgis.PyQt.QtWidgets import QDialog, QTreeWidgetItem
+from qgis.PyQt.QtWebKitWidgets import QWebView
 try:
     from qgis.PyQt.QtWebKit import *
     webkit_available = True
 except ImportError:
     webkit_available = False
-from qgis.PyQt import QtGui
+from qgis.PyQt import QtGui, QtWidgets
 import traceback
 import logging
 
@@ -61,7 +62,7 @@ class MainDialog(QDialog, Ui_MainDialog):
         mainDlg = self
         self.resize(QSettings().value("qgis2web/size", QSize(994, 647)))
         self.move(QSettings().value("qgis2web/pos", QPoint(50, 50)))
-        self.paramsTreeOL.setSelectionMode(QAbstractItemView.SingleSelection)
+        self.paramsTreeOL.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         if webkit_available:
             widget = QWebView()
             self.preview = widget
