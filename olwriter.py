@@ -24,13 +24,13 @@ import shutil
 import traceback
 import xml.etree.ElementTree
 from qgis.core import *
-from utils import (exportLayers, safeName, replaceInTemplate,
+from .utils import (exportLayers, safeName, replaceInTemplate,
                    is25d, getRGBAColor, ALL_ATTRIBUTES, BLEND_MODES)
 from qgis.utils import iface
 from qgis.PyQt.QtCore import *
 from qgis.PyQt.QtGui import *
-from olScriptStrings import *
-from basemaps import basemapOL
+from .olScriptStrings import *
+from .basemaps import basemapOL
 
 
 def writeOL(iface, layers, groups, popup, visible,
@@ -835,10 +835,10 @@ def exportStyles(layers, folder, clustered):
                     "stroke": stroke, "value": value}
             else:
                 style = "''"
-        except Exception, e:
+        except Exception as e:
             style = """{
             /* """ + traceback.format_exc() + " */}"
-            print traceback.format_exc()
+            print(traceback.format_exc())
 
         path = os.path.join(stylesFolder, safeName(layer.name()) + "_style.js")
 

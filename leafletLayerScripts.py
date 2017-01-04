@@ -5,11 +5,11 @@ import tempfile
 from qgis.PyQt.QtCore import QSize, QVariant
 import time
 from qgis.core import *
-from qgis.utils import QGis
-import processing
-from leafletStyleScripts import getLayerStyle
-from leafletScriptStrings import *
-from utils import (writeTmpLayer, getUsedFields, removeSpaces,
+from qgis.utils import Qgis
+# import processing
+from .leafletStyleScripts import getLayerStyle
+from .leafletScriptStrings import *
+from .utils import (writeTmpLayer, getUsedFields, removeSpaces,
                    is25d, exportImages, handleHiddenField, BLEND_MODES)
 
 
