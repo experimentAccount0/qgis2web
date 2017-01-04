@@ -1,11 +1,11 @@
 import re
 import os
 import shutil
-from urlparse import parse_qs
+from urllib.parse import parse_qs
 from qgis.PyQt.QtCore import QSize
 from qgis.core import *
-from utils import scaleToZoom
-from basemaps import basemapLeaflet, basemapAttributions
+from .utils import scaleToZoom
+from .basemaps import basemapLeaflet, basemapAttributions
 
 basemapAddresses = basemapLeaflet()
 

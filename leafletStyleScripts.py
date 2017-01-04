@@ -5,7 +5,7 @@ from math import floor
 import xml.etree.ElementTree
 from qgis.core import *
 # from qgis.utils import QGis
-from utils import getRGBAColor, handleHiddenField
+from .utils import getRGBAColor, handleHiddenField
 
 
 def getLayerStyle(layer, sln, markerFolder):
