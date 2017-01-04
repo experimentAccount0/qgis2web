@@ -27,14 +27,14 @@ import qgis  # pylint: disable=unused-import
 # noinspection PyUnresolvedReferences
 from qgis.PyQt.QtCore import *
 from qgis.PyQt.QtGui import *
-from qgis.PyQt.QtWidgets import QDialog, QTreeWidgetItem
-from qgis.PyQt.QtWebKitWidgets import QWebView
+from qgis.PyQt.QtWidgets import QDialog, QTreeWidgetItem, QComboBox, QAbstractItemView
+from qgis.PyQt.QtWebKitWidgets import QWebView, QWebInspector
 try:
     from qgis.PyQt.QtWebKit import *
     webkit_available = True
 except ImportError:
     webkit_available = False
-from qgis.PyQt import QtGui, QtWidgets
+# from qgis.PyQt import QtGui, QtWidgets
 import traceback
 import logging
 
@@ -62,7 +62,7 @@ class MainDialog(QDialog, Ui_MainDialog):
         mainDlg = self
         self.resize(QSettings().value("qgis2web/size", QSize(994, 647)))
         self.move(QSettings().value("qgis2web/pos", QPoint(50, 50)))
-        self.paramsTreeOL.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
+        self.paramsTreeOL.setSelectionMode(QAbstractItemView.SingleSelection)
         if webkit_available:
             widget = QWebView()
             self.preview = widget
@@ -118,7 +118,7 @@ class MainDialog(QDialog, Ui_MainDialog):
         self.toggleOptions()
 
     def toggleOptions(self):
-        for param, value in specificParams.iteritems():
+        for param, value in specificParams.items():
             treeParam = self.paramsTreeOL.findItems(param,
                                                     (Qt.MatchExactly |
                                                      Qt.MatchRecursive))[0]
@@ -132,7 +132,7 @@ class MainDialog(QDialog, Ui_MainDialog):
                     treeParam.setDisabled(True)
                 else:
                     treeParam.setDisabled(False)
-        for option, value in specificOptions.iteritems():
+        for option, value in specificOptions.items():
             treeOptions = self.layersTree.findItems(option,
                                                     (Qt.MatchExactly |
                                                      Qt.MatchRecursive))
@@ -239,7 +239,7 @@ class MainDialog(QDialog, Ui_MainDialog):
         self.layersTree.expandAll()
         self.layersTree.resizeColumnToContents(0)
         self.layersTree.resizeColumnToContents(1)
-        for i in xrange(self.layers_item.childCount()):
+        for i in range(self.layers_item.childCount()):
             item = self.layers_item.child(i)
             if item.checkState(0) != Qt.Checked:
                 item.setExpanded(False)
@@ -275,10 +275,10 @@ class MainDialog(QDialog, Ui_MainDialog):
     def populateConfigParams(self, dlg):
         global projectInstance
         self.items = defaultdict(dict)
-        for group, settings in paramsOL.iteritems():
+        for group, settings in paramsOL.items():
             item = QTreeWidgetItem()
             item.setText(0, group)
-            for param, value in settings.iteritems():
+            for param, value in settings.items():
                 isTuple = False
                 if isinstance(value, bool):
                     value = projectInstance.readBoolEntry("qgis2web",
@@ -329,7 +329,7 @@ class MainDialog(QDialog, Ui_MainDialog):
         searchCombo.removeItem(1)
 
     def populateBasemaps(self):
-        multiSelect = QtGui.QAbstractItemView.ExtendedSelection
+        multiSelect = QAbstractItemView.ExtendedSelection
         self.basemaps.setSelectionMode(multiSelect)
         attrFields = []
         for i in range(len(baselayers)):
@@ -392,8 +392,8 @@ class MainDialog(QDialog, Ui_MainDialog):
 
     def getParameters(self):
         parameters = defaultdict(dict)
-        for group, settings in self.items.iteritems():
-            for param, item in settings.iteritems():
+        for group, settings in self.items.items():
+            for param, item in settings.items():
                 parameters[group][param] = item.value()
         basemaps = self.basemaps.selectedItems()
         parameters["Appearance"]["Base layer"] = basemaps
@@ -403,8 +403,8 @@ class MainDialog(QDialog, Ui_MainDialog):
         global projectInstance
         projectInstance.removeEntry("qgis2web", "/")
         parameters = defaultdict(dict)
-        for group, settings in self.items.iteritems():
-            for param, item in settings.iteritems():
+        for group, settings in self.items.items():
+            for param, item in settings.items():
                 projectInstance.writeEntry("qgis2web", param.replace(" ", ""),
                                            item.setting())
         basemaps = self.basemaps.selectedItems()
@@ -419,7 +419,7 @@ class MainDialog(QDialog, Ui_MainDialog):
         visible = []
         json = []
         cluster = []
-        for i in xrange(self.layers_item.childCount()):
+        for i in range(self.layers_item.childCount()):
             item = self.layers_item.child(i)
             if isinstance(item, TreeLayerItem):
                 if item.checkState(0) == Qt.Checked:
