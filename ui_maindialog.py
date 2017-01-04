@@ -2,11 +2,11 @@
 
 # Form implementation generated from reading ui file 'ui_maindialog.ui'
 #
-# Created by: PyQt5 UI code generator 5.5.1
+# Created by: qgis.PyQt UI code generator 5.5.1
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt5 import QtCore, QtGui, QtWidgets
+from qgis.PyQt import QtCore, QtGui, QtWidgets
 
 class Ui_MainDialog(object):
     def setupUi(self, MainDialog):
@@ -151,5 +151,5 @@ class Ui_MainDialog(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainDialog", "Export"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainDialog", "Help"))
 
-# from PyQt5 import QtWebEngineWidgets
+# from qgis.PyQt import QtWebEngineWidgets
 from . import resources_rc

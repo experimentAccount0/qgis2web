@@ -18,7 +18,7 @@
 from qgis.core import QgsApplication
 import os
 import shutil
-from utils import tempFolder
+from .utils import tempFolder
 
 
 def getTemplates():

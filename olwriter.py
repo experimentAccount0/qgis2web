@@ -27,8 +27,8 @@ from qgis.core import *
 from utils import (exportLayers, safeName, replaceInTemplate,
                    is25d, getRGBAColor, ALL_ATTRIBUTES, BLEND_MODES)
 from qgis.utils import iface
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from qgis.PyQt.QtCore import *
+from qgis.PyQt.QtGui import *
 from olScriptStrings import *
 from basemaps import basemapOL
 
@@ -272,8 +272,8 @@ def writeOL(iface, layers, groups, popup, visible,
         with open(os.path.join(folder, "resources", "qgis2web.js"), "w") as f:
             f.write(replaceInScript("qgis2web.js", values))
     except Exception as e:
-        print "FAIL"
-        print traceback.format_exc()
+        print("FAIL")
+        print(traceback.format_exc())
     finally:
         QApplication.restoreOverrideCursor()
     return os.path.join(folder, "index.html")

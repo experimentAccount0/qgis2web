@@ -25,22 +25,22 @@ import webbrowser
 # noinspection PyUnresolvedReferences
 import qgis  # pylint: disable=unused-import
 # noinspection PyUnresolvedReferences
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
+from qgis.PyQt.QtCore import *
+from qgis.PyQt.QtGui import *
 try:
-    from PyQt5.QtWebKit import *
+    from qgis.PyQt.QtWebKit import *
     webkit_available = True
 except ImportError:
     webkit_available = False
-from PyQt5 import QtGui
+from qgis.PyQt import QtGui
 import traceback
 import logging
 
 from .ui_maindialog import Ui_MainDialog
 from . import utils
-from configparams import paramsOL, baselayers, specificParams, specificOptions
-from olwriter import writeOL
-from leafletWriter import *
+from .configparams import paramsOL, baselayers, specificParams, specificOptions
+from .olwriter import writeOL
+from .leafletWriter import *
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 

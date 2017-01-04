@@ -2,7 +2,7 @@ import re
 import os
 import shutil
 import tempfile
-from PyQt4.QtCore import QSize, QVariant
+from qgis.PyQt.QtCore import QSize, QVariant
 import time
 from qgis.core import *
 from qgis.utils import QGis
