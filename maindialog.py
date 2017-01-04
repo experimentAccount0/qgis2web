@@ -216,7 +216,7 @@ class MainDialog(QDialog, Ui_MainDialog):
             if layer.type() != QgsMapLayer.PluginLayer:
                 try:
                     if layer.type() == QgsMapLayer.VectorLayer:
-                        testDump = layer.rendererV2().dump()
+                        testDump = layer.renderer().dump()
                     layer_parent = tree_layer.parent()
                     if layer_parent.parent() is None:
                         item = TreeLayerItem(self.iface, layer,
@@ -225,8 +225,16 @@ class MainDialog(QDialog, Ui_MainDialog):
                     else:
                         if layer_parent not in tree_groups:
                             tree_groups.append(layer_parent)
-                except:
-                    pass
+                except Exception as e:
+                    errorHTML = "<html>"
+                    errorHTML += "<head></head>"
+                    errorHTML += "<style>body {font-family: sans-serif;}</style>"
+                    errorHTML += "<body><h1>Error</h1>"
+                    errorHTML += "<p>qgis2web produced an error:</p><code>"
+                    errorHTML += traceback.format_exc().replace("\n", "<br />")
+                    errorHTML += "</code></body></html>"
+                    self.preview.setHtml(errorHTML)
+                    print(traceback.format_exc())
 
         for tree_group in tree_groups:
             group_name = tree_group.name()
@@ -541,7 +549,7 @@ class TreeLayerItem(QTreeWidgetItem):
                     formCnf = layer.editFormConfig()
                     editorWidget = formCnf.widgetType(fieldIndex)
                 except:
-                    editorWidget = layer.editorWidgetV2(fieldIndex)
+                    editorWidget = layer.editorWidgetSetup(fieldIndex).type()
                 if (editorWidget == QgsVectorLayer.Hidden or
                         editorWidget == 'Hidden'):
                     continue

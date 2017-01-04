@@ -29,6 +29,7 @@ from .utils import (exportLayers, safeName, replaceInTemplate,
 from qgis.utils import iface
 from qgis.PyQt.QtCore import *
 from qgis.PyQt.QtGui import *
+from qgis.PyQt.QtWidgets import QApplication
 from .olScriptStrings import *
 from .basemaps import basemapOL
 
@@ -306,7 +307,7 @@ def writeLayersAndGroups(layers, groups, visible, folder, popup,
                                                       cluster)])
     groupVars = ""
     groupedLayers = {}
-    for group, groupLayers in groups.iteritems():
+    for group, groupLayers in groups.items():
         groupVars += ('''var %s = new ol.layer.Group({
                                 layers: [%s],
                                 title: "%s"});\n''' %
@@ -457,7 +458,7 @@ def replaceInScript(template, values):
     with open(path) as f:
         lines = f.readlines()
     s = "".join(lines)
-    for name, value in values.iteritems():
+    for name, value in values.items():
         s = s.replace(name, value)
     return s
 

@@ -470,7 +470,7 @@ def replaceInTemplate(template, values):
     with open(path) as f:
         lines = f.readlines()
     s = "".join(lines)
-    for name, value in values.iteritems():
+    for name, value in values.items():
         s = s.replace(name, value)
     return s
 
