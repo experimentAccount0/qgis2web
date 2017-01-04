@@ -20,6 +20,7 @@ import time
 import re
 import shutil
 from PyQt4.QtCore import QDir, QVariant
+from PyQt4.QtGui import QPainter
 from qgis.core import *
 from qgis.utils import QGis
 import processing
@@ -40,6 +41,22 @@ TYPE_MAP = {
     QGis.WKBMultiLineString25D: 'MultiLineString',
     QGis.WKBMultiPolygon: 'MultiPolygon',
     QGis.WKBMultiPolygon25D: 'MultiPolygon'}
+
+BLEND_MODES = {
+    QPainter.CompositionMode_SourceOver: 'normal',
+    QPainter.CompositionMode_Multiply: 'multiply',
+    QPainter.CompositionMode_Screen: 'screen',
+    QPainter.CompositionMode_Overlay: 'overlay',
+    QPainter.CompositionMode_Darken: 'darken',
+    QPainter.CompositionMode_Lighten: 'lighten',
+    QPainter.CompositionMode_ColorDodge: 'color-dodge',
+    QPainter.CompositionMode_ColorBurn: 'color-burn',
+    QPainter.CompositionMode_HardLight: 'hard-light',
+    QPainter.CompositionMode_SoftLight: 'soft-light',
+    QPainter.CompositionMode_Difference: 'difference',
+    QPainter.CompositionMode_Exclusion: 'exclusion'}
+
+PLACEMENT = ['bottomleft', 'topleft', 'topright', 'bottomleft', 'bottomright']
 
 
 def tempFolder():
@@ -490,3 +507,23 @@ def exportImages(layer, field, layerFileName):
             shutil.copyfile(source_file_name, photo_file_name)
         except IOError as e:
             pass
+
+
+def handleHiddenField(layer, field):
+    fieldIndex = layer.pendingFields().indexFromName(field)
+    try:
+        editFormConfig = layer.editFormConfig()
+        editorWidget = editFormConfig.widgetType(fieldIndex)
+    except:
+        editorWidget = layer.editorWidgetV2(fieldIndex)
+    if (editorWidget == QgsVectorLayer.Hidden or
+            editorWidget == 'Hidden'):
+        fieldName = "q2wHide_" + field
+    else:
+        fieldName = field
+    return fieldName
+
+
+def getRGBAColor(color, alpha):
+    r, g, b, _ = color.split(",")
+    return "'rgba(%s)'" % ",".join([r, g, b, unicode(alpha)])

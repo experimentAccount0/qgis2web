@@ -30,7 +30,7 @@ from basemaps import basemapLeaflet
 from leafletFileScripts import *
 from leafletLayerScripts import *
 from leafletScriptStrings import *
-from utils import ALL_ATTRIBUTES, removeSpaces
+from utils import ALL_ATTRIBUTES, PLACEMENT, removeSpaces
 
 
 def writeLeaflet(iface, outputProjectFileName, layer_list, visible, cluster,
@@ -44,7 +44,6 @@ def writeLeaflet(iface, outputProjectFileName, layer_list, visible, cluster,
     outputProjectFileName = os.path.join(outputProjectFileName,
                                          'qgis2web_' + unicode(time.time()))
     outputIndex = os.path.join(outputProjectFileName, 'index.html')
-    cluster_num = 1
 
     mapLibLocation = params["Data export"]["Mapping library location"]
     minify = params["Data export"]["Minify GeoJSON files"]
@@ -84,7 +83,7 @@ def writeLeaflet(iface, outputProjectFileName, layer_list, visible, cluster,
         rawLayerName = layer.name()
         safeLayerName = re.sub('[\W_]+', '', rawLayerName) + unicode(lyrCount)
         lyrCount += 1
-        dataPath = os.path.join(dataStore, 'json_' + safeLayerName)
+        dataPath = os.path.join(dataStore, safeLayerName)
         tmpFileName = dataPath + '.json'
         layerFileName = dataPath + '.js'
         if layer.providerType() != 'WFS' or jsonEncode is True and layer:
@@ -109,7 +108,8 @@ def writeLeaflet(iface, outputProjectFileName, layer_list, visible, cluster,
     crsSrc = mapSettings.destinationCrs()
     crsAuthId = crsSrc.authid()
     crsProj4 = crsSrc.toProj4()
-    middle = openScript()
+    middle = """
+        <script>"""
     if highlight or popupsOnHover:
         selectionColor = mapSettings.selectionColor().name()
         middle += highlightScript(highlight, popupsOnHover, selectionColor)
@@ -138,25 +138,24 @@ def writeLeaflet(iface, outputProjectFileName, layer_list, visible, cluster,
         basemapText = ""
     else:
         basemapText = basemapsScript(basemapList, maxZoom)
-    layerOrder = layerOrderScript(extent, restrictToExtent)
+    extentCode = extentScript(extent, restrictToExtent)
     new_src += middle
     new_src += basemapText
-    new_src += layerOrder
+    new_src += extentCode
 
-    lyrCount = 0
     for count, layer in enumerate(layer_list):
         rawLayerName = layer.name()
-        safeLayerName = re.sub('[\W_]+', '', rawLayerName) + unicode(lyrCount)
-        lyrCount += 1
+        safeLayerName = re.sub('[\W_]+', '', rawLayerName) + unicode(count)
         if layer.type() == QgsMapLayer.VectorLayer:
             (new_src,
              legends,
-             wfsLayers) = writeVectorLayer(layer, safeLayerName, usedFields,
-                                           highlight, popupsOnHover, popup,
-                                           count, outputProjectFileName,
-                                           wfsLayers, cluster, cluster_num,
-                                           visible, json, legends, new_src,
-                                           canvas, lyrCount)
+             wfsLayers) = writeVectorLayer(layer, safeLayerName,
+                                           usedFields[count], highlight,
+                                           popupsOnHover, popup[count],
+                                           outputProjectFileName, wfsLayers,
+                                           cluster[count], visible[count],
+                                           json[count], legends, new_src,
+                                           canvas, count)
         elif layer.type() == QgsMapLayer.RasterLayer:
             if layer.dataProvider().name() == "wms":
                 new_obj = wmsScript(layer, safeLayerName)
@@ -181,7 +180,10 @@ def writeLeaflet(iface, outputProjectFileName, layer_list, visible, cluster,
         new_src += addLayersList(basemapList, matchCRS, layer_list, cluster,
                                  legends)
     if project.readBoolEntry("ScaleBar", "/Enabled", False)[0]:
-        end = scaleBar()
+        placement = project.readNumEntry("ScaleBar", "/Placement", 0)[0]
+        placement = PLACEMENT[placement]
+        print placement
+        end = scaleBar(placement)
     else:
         end = ''
     end += endHTMLscript(wfsLayers, layerSearch, labelVisibility)

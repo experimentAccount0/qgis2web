@@ -1,3 +1,4 @@
+[![GitHub version](https://badge.fury.io/gh/tomchadwin%2Fqgis2web.svg)](https://badge.fury.io/gh/tomchadwin%2Fqgis2web)
 [![Build Status](https://travis-ci.org/tomchadwin/qgis2web.svg?branch=master)](https://travis-ci.org/tomchadwin/qgis2web)
 [![Coverage Status](https://coveralls.io/repos/github/tomchadwin/qgis2web/badge.svg?branch=master)](https://coveralls.io/github/tomchadwin/qgis2web?branch=master)
 [![Join the chat at https://gitter.im/tomchadwin/qgis2web](https://badges.gitter.im/tomchadwin/qgis2web.svg)](https://gitter.im/tomchadwin/qgis2web?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
@@ -142,12 +143,13 @@ is wasted in bug reporting, please follow these steps:</p>
     <li>Make sure you are using the latest release of qgis2web</li>
     <li>Check the issues on Github to see whether the bug has already been
         reported, and if so, read through all the comments on the issue, and
-        add any additional informaton from your experience of the bug</li>
+        add any additional information from your experience of the bug</li>
     <li>Make sure you can reproduce the bug reliably</li>
     <li>Reduce the complexity of your bug conditions as far as you can,
         especially by reducing the number of layers, ideally to one</li>
     <li>Raise a Github issue, including:
     <ul>
+        <li>only one bug per Github issue</li>
         <li>the qgis2web version (or make it clear you are using Github master
             branch)</li>
         <li>any Python error text/stack trace which occurs</li>

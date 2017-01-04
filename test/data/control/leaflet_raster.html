@@ -10,13 +10,6 @@
         <link rel="stylesheet" type="text/css" href="css/qgis2web.css">
         <link rel="stylesheet" href="css/MarkerCluster.css" />
         <link rel="stylesheet" href="css/MarkerCluster.Default.css" />
-        <script src="js/leaflet.js"></script>
-        <script src="js/leaflet-heat.js"></script>
-        <script src="js/leaflet.rotatedMarker.js"></script>
-        <script src="js/OSMBuildings-Leaflet.js"></script>
-        <script src="js/leaflet-hash.js"></script>
-        <script src="js/Autolinker.min.js"></script>
-        <script src="js/leaflet.markercluster.js"></script>
         <style>
         html, body, #map {
             width: 100%;
@@ -30,6 +23,13 @@
     <body>
         <div id="map">
         </div>
+        <script src="js/leaflet.js"></script>
+        <script src="js/leaflet-heat.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/OSMBuildings-Leaflet.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/leaflet.markercluster.js"></script>
         <script>
         L.ImageOverlay.include({
             getBounds: function () {
@@ -58,7 +58,7 @@
             ];
           });
         }
-        var img_test0 = 'data/json_test0.png';
+        var img_test0 = 'data/test0.png';
         var img_bounds_test0 = [[54.9705646258,-2.11090194806],[54.979567765,-2.09526212094]];
         var overlay_test0 = new L.imageOverlay(img_test0, img_bounds_test0);
         bounds_group.addLayer(overlay_test0);

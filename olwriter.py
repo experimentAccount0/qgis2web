@@ -24,12 +24,12 @@ import shutil
 import traceback
 import xml.etree.ElementTree
 from qgis.core import *
-from utils import exportLayers, safeName, replaceInTemplate, is25d
+from utils import (exportLayers, safeName, replaceInTemplate,
+                   is25d, getRGBAColor, ALL_ATTRIBUTES, BLEND_MODES)
 from qgis.utils import iface
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from olScriptStrings import *
-from utils import ALL_ATTRIBUTES
 from basemaps import basemapOL
 
 
@@ -62,9 +62,9 @@ def writeOL(iface, layers, groups, popup, visible,
         <script src="./resources/ol.js"></script>"""
         else:
             cssAddress = """<link rel="stylesheet" href="http://"""
-            cssAddress += """openlayers.org/en/v3.18.2/css/ol.css" />"""
+            cssAddress += """openlayers.org/en/v3.20.1/css/ol.css" />"""
             jsAddress += """
-        <script src="http://openlayers.org/en/v3.18.2/"""
+        <script src="http://openlayers.org/en/v3.20.1/"""
             jsAddress += """build/ol.js"></script>"""
         layerSearch = settings["Appearance"]["Layer search"]
         if layerSearch != "None" and layerSearch != "":
@@ -103,7 +103,8 @@ def writeOL(iface, layers, groups, popup, visible,
                                     (safeName(layer.name()) + ".js"))
                 else:
                     layerSource = layer.source()
-                    if "retrictToRequestBBOX" in layerSource:
+                    if ("retrictToRequestBBOX" in layerSource or
+                            "restrictToRequestBBOX" in layerSource):
                         provider = layer.dataProvider()
                         uri = QgsDataSourceURI(provider.dataSourceUri())
                         wfsURL = uri.param("url")
@@ -194,6 +195,7 @@ def writeOL(iface, layers, groups, popup, visible,
         geolocate = geolocation(geolocateUser)
         geocode = settings["Appearance"]["Add address search"]
         geocodingLinks = geocodeLinks(geocode)
+        geocodingJS = geocodeJS(geocode)
         geocodingScript = geocodeScript(geocode)
         extracss = """
         <link rel="stylesheet" href="./resources/ol3-layerswitcher.css">
@@ -230,6 +232,7 @@ def writeOL(iface, layers, groups, popup, visible,
                   "@OL3_PROJ4@": proj4,
                   "@OL3_PROJDEF@": proj,
                   "@OL3_GEOCODINGLINKS@": geocodingLinks,
+                  "@OL3_GEOCODINGJS@": geocodingJS,
                   "@QGIS2WEBJS@": ol3qgis2webjs,
                   "@OL3_LAYERSWITCHER@": ol3layerswitcher,
                   "@OL3_LAYERS@": ol3layers,
@@ -391,8 +394,9 @@ osmb.set(geojson_{sln});""".format(shadows=shadows, sln=safeName(layer.name()))
     fieldAliases = ""
     fieldImages = ""
     fieldLabels = ""
+    blend_mode = ""
     for layer, labels in zip(layers, popup):
-        if layer.type() == layer.VectorLayer:
+        if layer.type() == layer.VectorLayer and not is25d(layer, canvas):
             fieldList = layer.pendingFields()
             aliasFields = ""
             imageFields = ""
@@ -427,6 +431,11 @@ osmb.set(geojson_{sln});""".format(shadows=shadows, sln=safeName(layer.name()))
             imageFields = "lyr_%(name)s.set('fieldImages', " % (
                         {"name": safeName(layer.name())}) + imageFields
             fieldImages += imageFields
+            blend_mode = """lyr_%(name)s.on('precompose', function(evt) {
+    evt.context.globalCompositeOperation = '%(blend)s';
+});""" % (
+                        {"name": safeName(layer.name()),
+                         "blend": BLEND_MODES[layer.blendMode()]})
 
     path = os.path.join(folder, "layers", "layers.js")
     with codecs.open(path, "w", "utf-8") as f:
@@ -439,6 +448,7 @@ osmb.set(geojson_{sln});""".format(shadows=shadows, sln=safeName(layer.name()))
         f.write(fieldAliases)
         f.write(fieldImages)
         f.write(fieldLabels)
+        f.write(blend_mode)
     return osmb
 
 
@@ -810,7 +820,7 @@ def exportStyles(layers, folder, clustered):
               offsetX: 5,
               offsetY: 3,
               fill: new ol.style.Fill({
-                color: "%(color)s"
+                color: '%(color)s'
               }),%(stroke)s
             });
         %(cache)s[key] = new ol.style.Style({"text": text})
@@ -838,11 +848,6 @@ var styleCache_%(name)s={}
 var style_%(name)s = %(style)s;''' %
                     {"defs": defs, "name": safeName(layer.name()),
                      "style": style})
-
-
-def getRGBAColor(color, alpha):
-    r, g, b, _ = color.split(",")
-    return '"rgba(%s)"' % ",".join([r, g, b, unicode(alpha)])
 
 
 def getSymbolAsStyle(symbol, stylesFolder, layer_transparency):
@@ -1103,7 +1108,15 @@ def geocodeLinks(geocode):
     if geocode:
         returnVal = """
     <link href="http://cdn.jsdelivr.net/openlayers.geocoder/latest/"""
-        returnVal += """ol3-geocoder.min.css" rel="stylesheet">
+        returnVal += """ol3-geocoder.min.css" rel="stylesheet">"""
+        return returnVal
+    else:
+        return ""
+
+
+def geocodeJS(geocode):
+    if geocode:
+        returnVal = """
     <script src="http://cdn.jsdelivr.net/openlayers.geocoder/latest/"""
         returnVal += """ol3-geocoder.js"></script>"""
         return returnVal

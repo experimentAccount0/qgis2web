@@ -119,7 +119,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
         self.dialog.leaflet.click()
 
         # Open the test file
@@ -132,9 +132,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
 
     def test10_Leaflet_wfs_pnt_single(self):
         """Leaflet WFS point single"""
-        layer_url = ('http://maps.nationalparks.gov.uk/geoserver/wfs?SERVICE'
-                     '=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME=dartmoor'
-                     ':dnpa-tpo-point&SRSNAME=EPSG:27700&BBOX=233720,53549,297567,96689')
+        layer_url = ('http://balleter.nationalparks.gov.uk/geoserver/wfs?SERVICE=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME=dnpa_inspire:tpo_points&SRSNAME=EPSG:27700&BBOX=233720,53549,297567,96689')
         layer_style = test_data_path('style', 'point_single.qml')
         layer = load_wfs_layer(layer_url, 'point')
         layer.loadNamedStyle(layer_style)
@@ -156,7 +154,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
         self.dialog.leaflet.click()
 
         test_file = open(
@@ -188,7 +186,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
         self.dialog.leaflet.click()
 
         test_file = open(
@@ -199,12 +197,11 @@ class qgis2web_classDialogTest(unittest.TestCase):
 
     def test12_Leaflet_wfs_line_single(self):
         """Leaflet WFS line single"""
-        layer_url = ('http://maps.nationalparks.gov.uk/geoserver/wfs?SERVICE'
-                     '=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME'
-                     '=yorkshire_dales:ydnpa_route_accessibility&SRSNAME=EPSG'
-                     ':27700')
+        layer_url = ('http://balleter.nationalparks.gov.uk/geoserver/wfs?'
+                     'SERVICE=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME'
+                     '=broads_inspire:centreline&SRSNAME=EPSG:27700')
         layer_style = test_data_path('style', 'line_single.qml')
-        layer = load_wfs_layer(layer_url, 'line')
+        layer = load_wfs_layer(layer_url, 'centreline')
         layer.loadNamedStyle(layer_style)
 
         registry = QgsMapLayerRegistry.instance()
@@ -222,7 +219,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
         self.dialog.leaflet.click()
         test_file = open(
                 self.dialog.preview.url().toString().replace('file://', ''))
@@ -253,7 +250,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
         self.dialog.leaflet.click()
 
         test_file = open(
@@ -264,10 +261,9 @@ class qgis2web_classDialogTest(unittest.TestCase):
 
     def test14_Leaflet_wfs_poly_single(self):
         """Leaflet WFS polygon single"""
-        layer_url = ('http://maps.nationalparks.gov.uk/geoserver/wfs?SERVICE'
-                     '=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME'
-                     '=yorkshire_dales:ydnpa_conservationareas&SRSNAME=EPSG'
-                     ':27700')
+        layer_url = ('http://balleter.nationalparks.gov.uk/geoserver/wfs?'
+                     'SERVICE=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME'
+                     '=dnpa_inspire:con_areas&SRSNAME=EPSG:27700')
         layer_style = test_data_path('style', 'polygon_single.qml')
         control_path = test_data_path(
                 'control', 'leaflet_wfs_polygon_single.html')
@@ -289,7 +285,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
         self.dialog.leaflet.click()
 
         test_file = open(
@@ -323,7 +319,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
         self.dialog.leaflet.click()
 
         test_file = open(self.dialog.preview.url().toString().replace("file://",""))
@@ -333,9 +329,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
 
     def test16_Leaflet_wfs_pnt_categorized(self):
         """Leaflet WFS point categorized"""
-        layer_url = ('http://maps.nationalparks.gov.uk/geoserver/wfs?SERVICE'
-                     '=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME=dartmoor'
-                     ':dnpa-tpo-point&SRSNAME=EPSG:27700&BBOX=233720,53549,297567,96689')
+        layer_url = ('http://balleter.nationalparks.gov.uk/geoserver/wfs?SERVICE=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME=dnpa_inspire:tpo_points&SRSNAME=EPSG:27700&BBOX=233720,53549,297567,96689')
         layer_style = test_data_path('style', 'wfs_point_categorized.qml')
         control_path = test_data_path(
                 'control', 'leaflet_wfs_point_categorized.html')
@@ -356,7 +350,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
         self.dialog.leaflet.click()
         test_file = open(self.dialog.preview.url().toString().replace("file://",""))
         test_output = test_file.read()
@@ -387,7 +381,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
         self.dialog.leaflet.click()
         test_file = open(
                 self.dialog.preview.url().toString().replace('file://', ''))
@@ -397,14 +391,13 @@ class qgis2web_classDialogTest(unittest.TestCase):
 
     def test18_Leaflet_wfs_line_categorized(self):
         """Leaflet WFS line categorized"""
-        layer_url = ('http://maps.nationalparks.gov.uk/geoserver/wfs?SERVICE'
-                     '=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME'
-                     '=yorkshire_dales:ydnpa_route_accessibility&SRSNAME=EPSG'
-                     ':27700')
+        layer_url = ('http://balleter.nationalparks.gov.uk/geoserver/wfs?'
+                     'SERVICE=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME'
+                     '=broads_inspire:centreline&SRSNAME=EPSG:27700')
         layer_style = test_data_path('style', 'wfs_line_categorized.qml')
         control_path = test_data_path(
                 'control', 'leaflet_wfs_line_categorized.html')
-        layer = load_wfs_layer(layer_url, 'line')
+        layer = load_wfs_layer(layer_url, 'centreline')
         layer.loadNamedStyle(layer_style)
 
         registry = QgsMapLayerRegistry.instance()
@@ -421,7 +414,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
         self.dialog.leaflet.click()
 
         test_file = open(
@@ -454,7 +447,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
         self.dialog.leaflet.click()
 
         test_file = open(
@@ -465,10 +458,9 @@ class qgis2web_classDialogTest(unittest.TestCase):
 
     def test20_Leaflet_wfs_poly_categorized(self):
         """Leaflet WFS polygon categorized"""
-        layer_url = ('http://maps.nationalparks.gov.uk/geoserver/wfs?SERVICE'
-                     '=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME'
-                     '=yorkshire_dales:ydnpa_conservationareas&SRSNAME=EPSG'
-                     ':27700')
+        layer_url = ('http://balleter.nationalparks.gov.uk/geoserver/wfs?'
+                     'SERVICE=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME'
+                     '=dnpa_inspire:con_areas&SRSNAME=EPSG:27700')
         layer_style = test_data_path('style', 'wfs_polygon_categorized.qml')
         control_path = test_data_path(
                 'control', 'leaflet_wfs_polygon_categorized.html')
@@ -490,7 +482,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
         self.dialog.leaflet.click()
         test_file = open(
                 self.dialog.preview.url().toString().replace('file://', ''))
@@ -522,7 +514,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
         self.dialog.leaflet.click()
 
         test_file = open(
@@ -533,9 +525,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
 
     def test22_Leaflet_wfs_pnt_graduated(self):
         """Leaflet WFS point graduated"""
-        layer_url = ('http://maps.nationalparks.gov.uk/geoserver/wfs?SERVICE'
-                     '=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME=dartmoor'
-                     ':dnpa-tpo-point&SRSNAME=EPSG:27700&BBOX=233720,53549,297567,96689')
+        layer_url = ('http://balleter.nationalparks.gov.uk/geoserver/wfs?SERVICE=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME=dnpa_inspire:tpo_points&SRSNAME=EPSG:27700&BBOX=233720,53549,297567,96689')
         layer_style = test_data_path('style', 'wfs_point_graduated.qml')
         control_path = test_data_path(
                 'control', 'leaflet_wfs_point_graduated.html')
@@ -557,7 +547,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
         self.dialog.leaflet.click()
 
         test_file = open(
@@ -590,7 +580,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
         self.dialog.leaflet.click()
 
         test_file = open(self.dialog.preview.url().toString().replace(
@@ -601,14 +591,13 @@ class qgis2web_classDialogTest(unittest.TestCase):
 
     def test24_Leaflet_wfs_line_graduated(self):
         """Leaflet WFS line graduated"""
-        layer_url = ('http://maps.nationalparks.gov.uk/geoserver/wfs?SERVICE'
-                     '=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME'
-                     '=yorkshire_dales:ydnpa_route_accessibility&SRSNAME=EPSG'
-                     ':27700')
+        layer_url = ('http://balleter.nationalparks.gov.uk/geoserver/wfs?'
+                     'SERVICE=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME'
+                     '=broads_inspire:centreline&SRSNAME=EPSG:27700')
         layer_style = test_data_path('style', 'wfs_line_graduated.qml')
         control_path = test_data_path(
                 'control', 'leaflet_wfs_line_graduated.html')
-        layer = load_wfs_layer(layer_url, 'line')
+        layer = load_wfs_layer(layer_url, 'centreline')
         layer.loadNamedStyle(layer_style)
 
         registry = QgsMapLayerRegistry.instance()
@@ -626,7 +615,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
         self.dialog.leaflet.click()
 
         test_file = open(self.dialog.preview.url().toString().replace(
@@ -659,7 +648,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
         self.dialog.leaflet.click()
 
         test_file = open(self.dialog.preview.url().toString().replace(
@@ -670,10 +659,9 @@ class qgis2web_classDialogTest(unittest.TestCase):
 
     def test26_Leaflet_wfs_poly_graduated(self):
         """Leaflet WFS polygon graduated"""
-        layer_url = ('http://maps.nationalparks.gov.uk/geoserver/wfs?SERVICE'
-                     '=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME'
-                     '=yorkshire_dales:ydnpa_conservationareas&SRSNAME=EPSG'
-                     ':27700')
+        layer_url = ('http://balleter.nationalparks.gov.uk/geoserver/wfs?'
+                     'SERVICE=WFS&VERSION=1.0.0&REQUEST=GetFeature&TYPENAME'
+                     '=dnpa_inspire:con_areas&SRSNAME=EPSG:27700')
         layer_style = test_data_path('style', 'wfs_polygon_graduated.qml')
         control_path = test_data_path(
                 'control', 'leaflet_wfs_polygon_graduated.html')
@@ -695,7 +683,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
         self.dialog.leaflet.click()
 
         test_file = open(self.dialog.preview.url().toString().replace(
@@ -728,7 +716,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
         self.dialog.ol3.click()
 
         test_file = open(
@@ -768,7 +756,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
         self.dialog.ol3.click()
 
         test_file = open(
@@ -807,7 +795,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
         self.dialog.ol3.click()
 
         test_file = open(
@@ -847,7 +835,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
         self.dialog.ol3.click()
 
         test_file = open(
@@ -886,7 +874,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
         self.dialog.ol3.click()
 
         test_file = open(
@@ -925,7 +913,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
         self.dialog.ol3.click()
 
         test_file = open(
@@ -964,7 +952,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
         self.dialog.ol3.click()
 
         test_file = open(
@@ -1003,7 +991,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
         self.dialog.ol3.click()
 
         test_file = open(
@@ -1042,7 +1030,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
         self.dialog.ol3.click()
 
         test_file = open(
@@ -1175,7 +1163,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
         self.dialog.leaflet.click()
 
         # Open the test file
@@ -1263,7 +1251,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
         self.dialog.leaflet.click()
 
         # Open the test file
@@ -1296,7 +1284,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
 
         # Set the 'Measure tool' combo
         self.dialog.paramsTreeOL.itemWidget(
@@ -1359,7 +1347,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
         self.dialog.leaflet.click()
 
         # Open the test file
@@ -1391,7 +1379,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
 
         # Check the 'Add address search' checkbox
         self.dialog.items['Appearance'].get('Add address search').setCheckState(1, QtCore.Qt.Checked)
@@ -1450,7 +1438,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
         self.dialog.leaflet.click()
 
         # Open the test file
@@ -1530,7 +1518,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
         self.dialog.leaflet.click()
 
         # Open the test file
@@ -1612,7 +1600,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
         self.dialog.leaflet.click()
 
         # Open the test file
@@ -1647,7 +1635,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
 
                 # Check the 'Match project CRS' checkbox
         self.dialog.items['Appearance'].get('Match project CRS').setCheckState(1, QtCore.Qt.Checked)
@@ -1707,7 +1695,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
         self.dialog.leaflet.click()
 
         # Open the test file
@@ -1748,7 +1736,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
         self.dialog.leaflet.click()
 
         # Open the test file
@@ -1827,7 +1815,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
         self.dialog.leaflet.click()
 
         # Open the test file
@@ -1909,7 +1897,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
         control_output = control_file.read()
 
         # Open the test file
-        test_output = read_output(self.dialog.preview.url().toString(), 'data/json_airports0.js')
+        test_output = read_output(self.dialog.preview.url().toString(), 'data/airports0.js')
 
         # Compare with control file
         self.assertEqual(test_output, control_output, diff(control_output, test_output))
@@ -1979,7 +1967,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
 
         # Set 'Mapping library location' combo to 'CDN'
         self.dialog.items['Data export'].get('Mapping library location').combo.setCurrentIndex(1)
@@ -1994,7 +1982,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
         self.assertEqual(test_output, control_output, diff(control_output, test_output))
 
     def test65_OL3_cdn(self):
-        """Leaflet CDN"""
+        """OL3 CDN"""
         layer_path = test_data_path('layer', 'airports.shp')
         style_path = test_data_path('style', 'airports_single.qml')
         layer = load_layer(layer_path)
@@ -2020,7 +2008,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
 
         # Set 'Mapping library location' combo to 'CDN'
         self.dialog.items['Data export'].get('Mapping library location').combo.setCurrentIndex(1)
@@ -2070,7 +2058,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
         control_output = control_file.read()
 
         # Open the test file
-        test_output = read_output(self.dialog.preview.url().toString(), 'data/json_airports0.js')
+        test_output = read_output(self.dialog.preview.url().toString(), 'data/airports0.js')
 
         # Compare with control file
         self.assertEqual(test_output, control_output)
@@ -2173,7 +2161,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
         self.dialog.leaflet.click()
 
         control_file = open(
@@ -2251,7 +2239,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
         self.dialog.leaflet.click()
 
         control_file = open(
@@ -2329,7 +2317,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
         self.dialog.leaflet.click()
 
         control_file = open(
@@ -2401,7 +2389,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                     self.dialog.paramsTreeOL.findItems(
                             'Template',
                             (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                    1).setCurrentIndex(1)
+                    1).setCurrentIndex(0)
 
             self.dialog.leaflet.click()
 
@@ -2442,7 +2430,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                     self.dialog.paramsTreeOL.findItems(
                             'Template',
                             (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                    1).setCurrentIndex(1)
+                    1).setCurrentIndex(0)
 
             self.dialog.ol3.click()
 
@@ -2482,7 +2470,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
                 self.dialog.paramsTreeOL.findItems(
                         'Template',
                         (Qt.MatchExactly | Qt.MatchRecursive))[0],
-                1).setCurrentIndex(1)
+                1).setCurrentIndex(0)
 
         self.dialog.leaflet.click()
 
@@ -2500,7 +2488,7 @@ class qgis2web_classDialogTest(unittest.TestCase):
         self.assertEqual(test_output, control_output, diff(control_output, test_output))
         
         # test for exported raster file
-        assert os.path.exists(self.dialog.preview.url().toString().replace('file://', '').replace('index.html', 'data/json_test0.png'))
+        assert os.path.exists(self.dialog.preview.url().toString().replace('file://', '').replace('index.html', 'data/test0.png'))
 
     def test79_OL3_raster(self):
         """OL3 raster"""

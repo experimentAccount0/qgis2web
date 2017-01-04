@@ -27,7 +27,11 @@ import qgis  # pylint: disable=unused-import
 # noinspection PyUnresolvedReferences
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-from PyQt4.QtWebKit import *
+try:
+    from PyQt4.QtWebKit import *
+    webkit_available = True
+except ImportError:
+    webkit_available = False
 from PyQt4 import QtGui
 import traceback
 import logging
@@ -57,40 +61,52 @@ class MainDialog(QDialog, Ui_MainDialog):
         self.resize(QSettings().value("qgis2web/size", QSize(994, 647)))
         self.move(QSettings().value("qgis2web/pos", QPoint(50, 50)))
         self.paramsTreeOL.setSelectionMode(QAbstractItemView.SingleSelection)
-        webview = self.preview.page()
-        webview.setNetworkAccessManager(QgsNetworkAccessManager.instance())
+        if webkit_available:
+            widget = QWebView()
+            self.preview = widget
+            webview = self.preview.page()
+            webview.setNetworkAccessManager(QgsNetworkAccessManager.instance())
+        else:
+            widget = QTextBrowser()
+            widget.setText(self.tr('Preview is not available since QtWebKit '
+                                   'dependency is missing on your system'))
+        self.right_layout.insertWidget(0, widget)
         self.populateConfigParams(self)
         self.populate_layers_and_groups(self)
         self.populateLayerSearch()
         self.populateBasemaps()
         self.selectMapFormat()
         self.toggleOptions()
-        self.previewMap()
+        if webkit_available:
+            self.previewMap()
+            self.buttonPreview.clicked.connect(self.previewMap)
+        else:
+            self.buttonPreview.setDisabled(True)
         self.layersTree.model().dataChanged.connect(self.populateLayerSearch)
         self.paramsTreeOL.itemClicked.connect(self.changeSetting)
         self.ol3.clicked.connect(self.changeFormat)
         self.leaflet.clicked.connect(self.changeFormat)
-        self.buttonPreview.clicked.connect(self.previewMap)
         self.buttonExport.clicked.connect(self.saveMap)
         readme = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                               "README.md")
         helpText = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                                 "helpFile.md")
         lines = open(readme, 'r').readlines()
-        lines[0] = "This is the new first line \n"
         with open(helpText, 'w') as helpFile:
             for ct, line in enumerate(lines):
-                if ct > 2:
+                if ct > 3:
                     helpFile.write(line)
             helpFile.close()
         self.helpField.setSource(QUrl.fromLocalFile(helpText))
-        self.devConsole = QWebInspector(self.verticalLayoutWidget_2)
-        self.devConsole.setFixedHeight(0)
-        self.devConsole.setObjectName("devConsole")
-        self.devConsole.setPage(self.preview.page())
-        self.verticalLayout_2.insertWidget(1, self.devConsole)
+        if webkit_available:
+            self.devConsole = QWebInspector(self.verticalLayoutWidget_2)
+            self.devConsole.setFixedHeight(0)
+            self.devConsole.setObjectName("devConsole")
+            self.devConsole.setPage(self.preview.page())
+            self.right_layout.insertWidget(1, self.devConsole)
         self.filter = devToggleFilter()
         self.installEventFilter(self.filter)
+        self.setModal(False)
 
     def changeFormat(self):
         global projectInstance
@@ -131,6 +147,8 @@ class MainDialog(QDialog, Ui_MainDialog):
                         treeOption.setDisabled(False)
 
     def previewMap(self):
+        if not webkit_available:
+            return
         try:
             if self.mapFormat.checkedButton().text() == "OpenLayers 3":
                 MainDialog.previewOL3(self)
