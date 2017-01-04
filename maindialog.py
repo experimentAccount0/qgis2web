@@ -27,6 +27,7 @@ import qgis  # pylint: disable=unused-import
 # noinspection PyUnresolvedReferences
 from qgis.PyQt.QtCore import *
 from qgis.PyQt.QtGui import *
+from qgis.PyQt.QtWidgets import QDialog, QTreeWidgetItem
 try:
     from qgis.PyQt.QtWebKit import *
     webkit_available = True

@@ -23,7 +23,7 @@ from qgis.PyQt.QtCore import QDir, QVariant
 from qgis.PyQt.QtGui import QPainter
 from qgis.core import *
 from qgis.utils import Qgis
-# import processing
+import processing
 import tempfile
 
 NO_POPUP = 0
