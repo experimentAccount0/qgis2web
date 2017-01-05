@@ -85,10 +85,6 @@ def writeTmpLayer(layer, popup):
     usedFields = []
     for count, field in enumerate(fields):
         fieldIndex = fields.indexFromName(unicode(field.name()))
-        try:
-            editorWidget = layer.editFormConfig().widgetType(fieldIndex)
-        except:
-            editorWidget = layer.editorWidgetV2(fieldIndex)
         addField = False
         try:
             if layer.rendererV2().classAttribute() == field.name():
@@ -97,8 +93,7 @@ def writeTmpLayer(layer, popup):
             pass
         if layer.customProperty("labeling/fieldName") == field.name():
             addField = True
-        if (editorWidget != QgsVectorLayer.Hidden and
-                editorWidget != 'Hidden'):
+        if (layer.editorWidgetSetup(fieldIndex).type() == 'Hidden'):
             addField = True
         if addField:
             usedFields.append(count)
@@ -109,14 +104,9 @@ def writeTmpLayer(layer, popup):
     for field in usedFields:
         fieldIndex = layer.pendingFields().indexFromName(unicode(
             layer.pendingFields().field(field).name()))
-        try:
-            editorWidget = layer.editFormConfig().widgetType(fieldIndex)
-        except:
-            editorWidget = layer.editorWidgetV2(fieldIndex)
         fieldType = layer.pendingFields().field(field).type()
         fieldName = layer.pendingFields().field(field).name()
-        if (editorWidget == QgsVectorLayer.Hidden or
-                editorWidget == 'Hidden'):
+        if (layer.editorWidgetSetup(fieldIndex).type() == 'Hidden'):
             fieldName = "q2wHide_" + fieldName
         fieldType = "double" if (fieldType == QVariant.Double or
                                  fieldType == QVariant.Int) else (
@@ -476,17 +466,12 @@ def replaceInTemplate(template, values):
 
 
 def exportImages(layer, field, layerFileName):
-    field_index = layer.fieldNameIndex(field)
-
-    try:
-        widget = layer.editFormConfig().widgetType(field_index)
-    except:
-        widget = layer.editorWidgetV2(field_index)
-    if widget != 'Photo':
+    fieldIndex = layer.pendingFields().indexFromName(field)
+    if layer.editorWidgetSetup(fieldIndex).type() != 'Photo':
         return
 
     fr = QgsFeatureRequest()
-    fr.setSubsetOfAttributes([field_index])
+    fr.setSubsetOfAttributes([fieldIndex])
 
     for feature in layer.getFeatures(fr):
         photo_file_name = feature.attribute(field)
@@ -511,13 +496,7 @@ def exportImages(layer, field, layerFileName):
 
 def handleHiddenField(layer, field):
     fieldIndex = layer.pendingFields().indexFromName(field)
-    try:
-        editFormConfig = layer.editFormConfig()
-        editorWidget = editFormConfig.widgetType(fieldIndex)
-    except:
-        editorWidget = layer.editorWidgetV2(fieldIndex)
-    if (editorWidget == QgsVectorLayer.Hidden or
-            editorWidget == 'Hidden'):
+    if (layer.editorWidgetSetup(fieldIndex).type() == 'Hidden'):
         fieldName = "q2wHide_" + field
     else:
         fieldName = field

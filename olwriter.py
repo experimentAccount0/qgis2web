@@ -322,22 +322,21 @@ def writeLayersAndGroups(layers, groups, visible, folder, popup,
     osmb = ""
     for layer in layers:
         try:
-            renderer = layer.rendererV2()
+            renderer = layer.renderer()
             if is25d(layer, canvas):
                 shadows = ""
-                renderer = layer.rendererV2()
                 renderContext = QgsRenderContext.fromMapSettings(
                         canvas.mapSettings())
                 fields = layer.pendingFields()
                 renderer.startRender(renderContext, fields)
                 for feat in layer.getFeatures():
-                    if isinstance(renderer, QgsCategorizedSymbolRendererV2):
+                    if isinstance(renderer, QgsCategorizedSymbolRenderer):
                         classAttribute = renderer.classAttribute()
                         attrValue = feat.attribute(classAttribute)
                         catIndex = renderer.categoryIndexForValue(attrValue)
                         categories = renderer.categories()
                         symbol = categories[catIndex].symbol()
-                    elif isinstance(renderer, QgsGraduatedSymbolRendererV2):
+                    elif isinstance(renderer, QgsGraduatedSymbolRenderer):
                         classAttribute = renderer.classAttribute()
                         attrValue = feat.attribute(classAttribute)
                         ranges = renderer.ranges()
@@ -415,10 +414,7 @@ osmb.set(geojson_{sln});""".format(shadows=shadows, sln=safeName(layer.name()))
                 aliasFields += "'%(field)s': '%(alias)s', " % (
                         {"field": f.name(),
                          "alias": layer.attributeDisplayName(fieldIndex)})
-                try:
-                    widget = layer.editFormConfig().widgetType(fieldIndex)
-                except:
-                    widget = layer.editorWidgetV2(fieldIndex)
+                widget = layer.editorWidgetSetup(fieldIndex).type()
                 imageFields += "'%(field)s': '%(image)s', " % (
                         {"field": f.name(),
                          "image": widget})
@@ -515,9 +511,9 @@ def layerToJavascript(iface, layer, encode2json, matchCRS, cluster):
     layerName = safeName(layer.name())
     if layer.type() == layer.VectorLayer and not is25d(layer,
                                                        iface.mapCanvas()):
-        renderer = layer.rendererV2()
-        if cluster and (isinstance(renderer, QgsSingleSymbolRendererV2) or
-                        isinstance(renderer, QgsRuleBasedRendererV2)):
+        renderer = layer.renderer()
+        if cluster and (isinstance(renderer, QgsSingleSymbolRenderer) or
+                        isinstance(renderer, QgsRuleBasedRenderer)):
             cluster = True
         else:
             cluster = False
@@ -694,11 +690,11 @@ def exportStyles(layers, folder, clustered):
             labelText = '""'
         defs = "var size = 0;\n"
         try:
-            renderer = layer.rendererV2()
+            renderer = layer.renderer()
             layer_alpha = layer.layerTransparency()
-            if (isinstance(renderer, QgsSingleSymbolRendererV2) or
-                    isinstance(renderer, QgsRuleBasedRendererV2)):
-                if isinstance(renderer, QgsRuleBasedRendererV2):
+            if (isinstance(renderer, QgsSingleSymbolRenderer) or
+                    isinstance(renderer, QgsRuleBasedRenderer)):
+                if isinstance(renderer, QgsRuleBasedRenderer):
                     symbol = renderer.rootRule().children()[0].symbol()
                 else:
                     symbol = renderer.symbol()
@@ -710,7 +706,7 @@ def exportStyles(layers, folder, clustered):
                                                                stylesFolder,
                                                                layer_alpha)
                 value = 'var value = ""'
-            elif isinstance(renderer, QgsCategorizedSymbolRendererV2):
+            elif isinstance(renderer, QgsCategorizedSymbolRenderer):
                 defs += """function categories_%s(feature, value) {
                 switch(value) {""" % safeName(layer.name())
                 cats = []
@@ -736,7 +732,7 @@ def exportStyles(layers, folder, clustered):
                 value = ('var value = feature.get("%s");' % classAttr)
                 style = ('''var style = categories_%s(feature, value)''' %
                          (safeName(layer.name())))
-            elif isinstance(renderer, QgsGraduatedSymbolRendererV2):
+            elif isinstance(renderer, QgsGraduatedSymbolRenderer):
                 varName = "ranges_" + safeName(layer.name())
                 defs += "var %s = [" % varName
                 ranges = []
@@ -790,10 +786,10 @@ def exportStyles(layers, folder, clustered):
                 labelRes += "&& resolution < %(max)d" % {"max": max}
             else:
                 labelRes = ""
-            buffer = palyr.bufferDraw
+            buffer = palyr.BufferDraw
             if buffer:
-                bufferColor = palyr.bufferColor.name()
-                bufferWidth = palyr.bufferSize
+                bufferColor = palyr.BufferColor.name()
+                bufferWidth = palyr.BufferSize
                 stroke = """
               stroke: new ol.style.Stroke({
                 color: "%s",
@@ -857,17 +853,17 @@ def getSymbolAsStyle(symbol, stylesFolder, layer_transparency):
         alpha = symbol.alpha()
     else:
         alpha = 1-(layer_transparency / float(100))
-    for i in xrange(symbol.symbolLayerCount()):
+    for i in range(symbol.symbolLayerCount()):
         sl = symbol.symbolLayer(i)
         props = sl.properties()
-        if isinstance(sl, QgsSimpleMarkerSymbolLayerV2):
+        if isinstance(sl, QgsSimpleMarkerSymbolLayer):
             color = getRGBAColor(props["color"], alpha)
             borderColor = getRGBAColor(props["outline_color"], alpha)
             borderWidth = props["outline_width"]
             size = symbol.size() * 2
             style = "image: %s" % getCircle(color, borderColor, borderWidth,
                                             size, props)
-        elif isinstance(sl, QgsSvgMarkerSymbolLayerV2):
+        elif isinstance(sl, QgsSvgMarkerSymbolLayer):
             path = os.path.join(stylesFolder, os.path.basename(sl.path()))
             svg = xml.etree.ElementTree.parse(sl.path()).getroot()
             svgWidth = svg.attrib["width"]
@@ -887,7 +883,7 @@ def getSymbolAsStyle(symbol, stylesFolder, layer_transparency):
             style = ("image: %s" %
                      getIcon("styles/" + os.path.basename(sl.path()),
                              sl.size(), svgWidth, svgHeight, rot))
-        elif isinstance(sl, QgsSimpleLineSymbolLayerV2):
+        elif isinstance(sl, QgsSimpleLineSymbolLayer):
 
             # Check for old version
             if 'color' in props:
@@ -910,7 +906,7 @@ def getSymbolAsStyle(symbol, stylesFolder, layer_transparency):
 
             style = getStrokeStyle(color, line_style, line_width,
                                    lineCap, lineJoin)
-        elif isinstance(sl, QgsSimpleFillSymbolLayerV2):
+        elif isinstance(sl, QgsSimpleFillSymbolLayer):
             fillColor = getRGBAColor(props["color"], alpha)
 
             # for old version

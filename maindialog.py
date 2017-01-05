@@ -27,7 +27,7 @@ import qgis  # pylint: disable=unused-import
 # noinspection PyUnresolvedReferences
 from qgis.PyQt.QtCore import *
 from qgis.PyQt.QtGui import *
-from qgis.PyQt.QtWidgets import QDialog, QTreeWidgetItem, QComboBox, QAbstractItemView
+from qgis.PyQt.QtWidgets import QDialog, QTreeWidgetItem, QComboBox, QAbstractItemView, QCheckBox
 from qgis.PyQt.QtWebKitWidgets import QWebView, QWebInspector
 try:
     from qgis.PyQt.QtWebKit import *
@@ -268,13 +268,7 @@ class MainDialog(QDialog, Ui_MainDialog):
                 fields = layer.pendingFields()
                 for f in fields:
                     fieldIndex = fields.indexFromName(unicode(f.name()))
-                    try:
-                        formCnf = layer.editFormConfig()
-                        editorWidget = formCnf.widgetType(fieldIndex)
-                    except:
-                        editorWidget = layer.editorWidgetV2(fieldIndex)
-                    if (editorWidget == QgsVectorLayer.Hidden or
-                            editorWidget == 'Hidden'):
+                    if (layer.editorWidgetSetup(fieldIndex).type() == 'Hidden'):
                         continue
                     options.append(f.name())
                 for option in options:
@@ -545,13 +539,7 @@ class TreeLayerItem(QTreeWidgetItem):
             fields = self.layer.pendingFields()
             for f in fields:
                 fieldIndex = fields.indexFromName(unicode(f.name()))
-                try:
-                    formCnf = layer.editFormConfig()
-                    editorWidget = formCnf.widgetType(fieldIndex)
-                except:
-                    editorWidget = layer.editorWidgetSetup(fieldIndex).type()
-                if (editorWidget == QgsVectorLayer.Hidden or
-                        editorWidget == 'Hidden'):
+                if (layer.editorWidgetSetup(fieldIndex).type() == 'Hidden'):
                     continue
                 options.append(f.name())
             for option in options:
@@ -589,7 +577,7 @@ class TreeLayerItem(QTreeWidgetItem):
                 self.jsonCheck.stateChanged.connect(self.changeJSON)
                 self.addChild(self.jsonItem)
                 tree.setItemWidget(self.jsonItem, 1, self.jsonCheck)
-            if layer.geometryType() == QGis.Point:
+            if layer.geometryType() == QgsWkbTypes.PointGeometry:
                 self.clusterItem = QTreeWidgetItem(self)
                 self.clusterCheck = QCheckBox()
                 if layer.customProperty("qgis2web/Cluster") == 2:
@@ -603,7 +591,7 @@ class TreeLayerItem(QTreeWidgetItem):
     def popup(self):
         popup = []
         self.tree = self.treeWidget()
-        for p in xrange(self.childCount()):
+        for p in range(self.childCount()):
             item = self.child(p).text(1)
             if item != "":
                 popupVal = self.tree.itemWidget(self.child(p), 2).currentText()
