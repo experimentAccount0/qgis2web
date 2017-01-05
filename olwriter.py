@@ -786,7 +786,7 @@ def exportStyles(layers, folder, clustered):
                 labelRes += "&& resolution < %(max)d" % {"max": max}
             else:
                 labelRes = ""
-            buffer = palyr.BufferDraw
+            buffer = palyr.format().buffer().enabled()
             if buffer:
                 bufferColor = palyr.BufferColor.name()
                 bufferWidth = palyr.BufferSize
