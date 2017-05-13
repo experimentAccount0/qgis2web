@@ -117,6 +117,25 @@ def writeVectorLayer(layer, safeLayerName, usedFields, highlight,
                                      outputProjectFileName, usedFields,
                                      legends, labeltext, cluster, json,
                                      wfsLayers, markerType)
+    if renderer.symbol().symbolLayerCount() > 1:
+        onadd = ""
+        onremove = ""
+        for i in xrange(renderer.symbol().symbolLayerCount()):
+            if i > 0:
+                onadd += """
+            map.addLayer(layer_%s_%s);
+            //layer_%s_%s.bringToBack();
+            """ % (safeLayerName, i, safeLayerName, i)
+                onremove += """
+                        map.removeLayer(layer_%s_%s);""" % (safeLayerName, i)
+        slCode = """
+        layer_%s_0.on('remove', function(e){
+        %s
+        })
+        layer_%s_0.on('add', function(e){
+        %s
+        })""" % (safeLayerName, onremove, safeLayerName, onadd)
+        new_obj = new_obj + slCode
     blend = BLEND_MODES[layer.blendMode()]
     new_obj = u"""{style}
         map.createPane('pane_{sln}');
@@ -133,11 +152,11 @@ def writeVectorLayer(layer, safeLayerName, usedFields, highlight,
         pass
     else:
         new_src += """
-        bounds_group.addLayer(layer_""" + safeLayerName + """);"""
+        bounds_group.addLayer(layer_""" + safeLayerName + """_0);"""
         if visible:
             if cluster is False:
                 new_src += """
-        map.addLayer(layer_""" + safeLayerName + """);"""
+        map.addLayer(layer_""" + safeLayerName + """_0);"""
             else:
                 new_src += """
         cluster_""" + safeLayerName + """.addTo(map);"""
@@ -373,8 +392,11 @@ def pointLayer(layer, safeLayerName, labeltext, cluster, usedFields, json,
         attrText = layer.attribution()
         attrUrl = layer.attributionUrl()
         layerAttr = '<a href="%s">%s</a>' % (attrUrl, attrText)
-        new_obj = buildPointJSON(safeLayerName, labeltext,
-                                 usedFields, markerType, layerAttr)
+        new_obj = ""
+        symbol = layer.rendererV2().symbol()
+        for i in xrange(symbol.symbolLayerCount()):
+            new_obj += buildPointJSON(safeLayerName, labeltext,
+                                     usedFields, markerType, layerAttr, i)
         if cluster:
             new_obj += clusterScript(safeLayerName)
     return new_obj, wfsLayers
@@ -388,7 +410,11 @@ def nonPointLayer(layer, safeLayerName, usedFields, json, wfsLayers):
         attrText = layer.attribution()
         attrUrl = layer.attributionUrl()
         layerAttr = '<a href="%s">%s</a>' % (attrUrl, attrText)
-        new_obj = buildNonPointJSON(safeLayerName, usedFields, layerAttr)
+        new_obj = ""
+        symbol = layer.rendererV2().symbol()
+        for i in xrange(symbol.symbolLayerCount()):
+            new_obj += buildNonPointJSON(safeLayerName, usedFields,
+                                         layerAttr, i)
     return new_obj, wfsLayers
 
 
@@ -430,12 +456,12 @@ def heatmapLayer(layer, safeLayerName, renderer, legends, wfsLayers):
     return new_obj, legends, wfsLayers
 
 
-def buildPointJSON(sln, label, usedFields, markerType, layerAttr):
+def buildPointJSON(sln, label, usedFields, markerType, layerAttr, i):
     pointJSON = """
-        var layer_{sln} = new L.geoJson(json_{sln}, {{
+        var layer_{sln}_{i} = new L.geoJson(json_{sln}, {{
             attribution: '{attr}',
             pane: 'pane_{sln}',"""
-    if usedFields != 0:
+    if usedFields != 0 and i == 0:
         pointJSON += """
             onEachFeature: pop_{sln},"""
     pointJSON += """
@@ -445,11 +471,11 @@ def buildPointJSON(sln, label, usedFields, markerType, layerAttr):
                     variables: {{}}
                 }};
                 return L.{markerType}(latlng, """
-    pointJSON += """style_{sln}(feature)){label}
+    pointJSON += """style_{sln}_{i}(feature)){label}
             }}
         }});"""
     pointJSON = pointJSON.format(sln=sln, label=label, markerType=markerType,
-                                 attr=layerAttr)
+                                 attr=layerAttr, i=i)
     return pointJSON
 
 
@@ -483,20 +509,20 @@ def buildPointWFS(p2lf, layerName, layer, cluster_set):
     return new_obj, scriptTag
 
 
-def buildNonPointJSON(safeName, usedFields, layerAttr):
+def buildNonPointJSON(safeName, usedFields, layerAttr, i):
     if usedFields != 0:
         onEachFeature = """
         onEachFeature: pop_{safeName},""".format(safeName=safeName)
     else:
         onEachFeature = ""
     new_obj = """
-    var layer_{safeName} = new L.geoJson(json_{safeName}, {{
+    var layer_{safeName}_{i} = new L.geoJson(json_{safeName}, {{
         attribution: '{attr}',
         pane: 'pane_{safeName}',{onEachFeature}
-        style: style_{safeName}
+        style: style_{safeName}_{i}
     }});"""
     new_obj = new_obj.format(safeName=safeName, attr=layerAttr,
-                             onEachFeature=onEachFeature)
+                             onEachFeature=onEachFeature, i=i)
     new_obj = new_obj
 
     return new_obj

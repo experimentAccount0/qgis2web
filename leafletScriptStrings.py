@@ -426,7 +426,7 @@ def addLayersList(basemapList, matchCRS, layer_list, cluster, legends,
                     new_layer += ": cluster_""" + safeLayerName + ","
                 else:
                     new_layer = "'" + legends[safeLayerName] + "':"
-                    new_layer += " layer_" + safeLayerName + ","
+                    new_layer += " layer_" + safeLayerName + "_0,"
                 layersList += new_layer
             elif i.type() == QgsMapLayer.RasterLayer:
                 new_layer = '"' + rawLayerName + '"' + ": overlay_"

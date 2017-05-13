@@ -22,33 +22,39 @@ def getLayerStyle(layer, sln, markerFolder, outputProjectFilename):
     layer_alpha = layer.layerTransparency()
     style = ""
     if isinstance(renderer, QgsSingleSymbolRendererV2):
+        style = ""
         symbol = renderer.symbol()
-        (styleCode, markerType) = getSymbolAsStyle(symbol, markerFolder,
-                                                   layer_alpha, sln)
-        style = """
-        function style_%s() {
+        for i in xrange(symbol.symbolLayerCount()):
+            (styleCode, markerType) = getSymbolAsStyle(symbol, markerFolder,
+                                                       layer_alpha, sln, i)
+            style += """
+        function style_%s_%s() {
             return %s
-        }""" % (sln, styleCode)
+        }""" % (sln, i, styleCode)
+            
     elif isinstance(renderer, QgsCategorizedSymbolRendererV2):
         classAttr = handleHiddenField(layer, renderer.classAttribute())
         style = """
         function style_%s(feature) {
             switch(feature.properties['%s']) {""" % (sln, classAttr)
         for cat in renderer.categories():
-            (styleCode, markerType) = getSymbolAsStyle(cat.symbol(),
+            styleCodes = ""
+            for i in xrange(cat.symbol().symbolLayerCount()):
+                (styleCode, markerType) = getSymbolAsStyle(cat.symbol(),
                                                        markerFolder,
-                                                       layer_alpha, sln)
-            if (cat.value() is not None and cat.value() != "" and
-                    not isinstance(cat.value(), QPyNullVariant)):
+                                                       layer_alpha, sln, i)
+                styleCodes += styleCode
+                if (cat.value() is not None and cat.value() != "" and
+                        not isinstance(cat.value(), QPyNullVariant)):
+                    style += """
+                    case '%s':""" % unicode(cat.value()).replace("'", "\\'")
+                else:
+                    style += """
+                    default:"""
                 style += """
-                case '%s':""" % unicode(cat.value()).replace("'", "\\'")
-            else:
-                style += """
-                default:"""
+                        return %s
+                        break;""" % styleCodes
             style += """
-                    return %s
-                    break;""" % styleCode
-        style += """
             }
         }"""
     elif isinstance(renderer, QgsGraduatedSymbolRendererV2):
@@ -113,21 +119,21 @@ def getLayerStyle(layer, sln, markerFolder, outputProjectFilename):
     return style, markerType
 
 
-def getSymbolAsStyle(symbol, markerFolder, layer_transparency, sln):
+def getSymbolAsStyle(symbol, markerFolder, layer_transparency, sln, i):
     markerType = None
     styles = []
     if layer_transparency == 0:
         alpha = symbol.alpha()
     else:
         alpha = 1-(layer_transparency / float(100))
-    sl = symbol.symbolLayer(0)
+    sl = symbol.symbolLayer(i)
     props = sl.properties()
     if isinstance(sl, QgsSimpleMarkerSymbolLayerV2):
         color = getRGBAColor(props["color"], alpha)
         borderColor = getRGBAColor(props["outline_color"], alpha)
         borderWidth = props["outline_width"]
         lineStyle = props["outline_style"]
-        size = symbol.size() * 2
+        size = sl.size() * 2
         style = getCircle(color, borderColor, borderWidth,
                           size, props, lineStyle)
         markerType = "circleMarker"
